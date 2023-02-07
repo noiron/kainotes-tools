@@ -1,0 +1,26 @@
+{
+  "name": "kainotes-tools",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsup index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/noiron/kainotes-tools.git"
+  },
+  "keywords": [
+    "kainotes"
+  ],
+  "author": "noiron",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/noiron/kainotes-tools/issues"
+  },
+  "homepage": "https://github.com/noiron/kainotes-tools#readme",
+  "devDependencies": {
+    "tsup": "^6.5.0"
+  }
+}
