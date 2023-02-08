@@ -16,3 +16,19 @@ export const purifyTag = (tag: string) => {
   if (tag[0] !== '#') return tag;
   return tag.slice(1);
 };
+
+/**
+ * 从文件内容中获得文件标题，一般为文件的第一行，以 # 开头
+ */
+export function extractTitleFromContent(content: string) {
+  const lines = content.split('\n');
+  let i = 0;
+  while (lines[i].trim() === '') {
+    i++;
+  }
+  const firstLine = lines[i];
+  if (firstLine.startsWith('# ')) {
+    return firstLine.substring(2).trim();
+  }
+  return '';
+}
