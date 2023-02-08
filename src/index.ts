@@ -32,3 +32,19 @@ export function extractTitleFromContent(content: string) {
   }
   return '';
 }
+
+// (?<=^|\s) positive lookbehind - hash must be start of a line or have space before it
+// (?!\s|#|!|\d) negative lookahead - space, #, !, numbers can't be after hash
+const MARKDOWN_REGEX = /(?<=^|\s)#(?!\s|#|!|\d)([\S]+)/gm;
+
+/**
+ * 检查给定的内容中是否包含标签，并提取出来
+ */
+export const extractTagsFromContent = (content: string) => {
+  const tags = content.match(MARKDOWN_REGEX);
+  if (!tags) {
+    return null;
+  }
+  // 去除重复的标签
+  return [...new Set(tags.map(purifyTag))];
+};
