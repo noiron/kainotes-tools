@@ -48,3 +48,41 @@ export const extractTagsFromContent = (content: string) => {
   // 去除重复的标签
   return [...new Set(tags.map(purifyTag))];
 };
+
+const ALL_TAGS = '__ALL__';
+
+/**
+ * 在文件列表中查找包含给定标签的文件
+ * @param folderPath {string} 文件夹路径
+ * @param fileList {string[]} 文件路径列表
+ * @param searchTag {string} 要查找的标签
+ * @returns
+ */
+export async function getFilesContainTag(
+  folderPath: string,
+  fileList: string[],
+  searchTag: string,
+  extractFileTags: (filePath: string) => Promise<string[]> | string[]
+) {
+  const list: string[] = [];
+  const promises = fileList.filter(isMarkdownFile).map(async (absolutePath) => {
+    const tagsInFile = await extractFileTags(absolutePath);
+    const relativePath = path.relative(folderPath, absolutePath);
+
+    if (searchTag === ALL_TAGS) {
+      list.push(relativePath);
+    } else if (tagsInFile) {
+      for (const tag of tagsInFile) {
+        if (tag === searchTag) {
+          list.push(relativePath);
+          break;
+        }
+      }
+    } else if (!searchTag) {
+      // 查找所有不包含标签的文件
+      list.push(relativePath);
+    }
+  });
+  await Promise.all(promises);
+  return list;
+}
