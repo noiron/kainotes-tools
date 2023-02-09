@@ -17,11 +17,11 @@ export const purifyTag = (tag: string) => {
   return tag.slice(1);
 };
 
-export function extractFileTitle(
+export async function extractFileTitle(
   filePath: string,
-  readFileContent: (filePath: string) => string
+  readFileContent: (filePath: string) => string | Promise<string>
 ) {
-  const content = readFileContent(filePath);
+  const content = await readFileContent(filePath);
   return extractTitleFromContent(content);
 }
 
@@ -40,6 +40,14 @@ export function extractTitleFromContent(content: string) {
   }
   return '';
 }
+
+export const extractFileTags = async (
+  filePath: string,
+  readFileContent: (filePath: string) => string | Promise<string>
+) => {
+  const content = await readFileContent(filePath);
+  return extractTagsFromContent(content) || [];
+};
 
 // (?<=^|\s) positive lookbehind - hash must be start of a line or have space before it
 // (?!\s|#|!|\d) negative lookahead - space, #, !, numbers can't be after hash
@@ -70,11 +78,11 @@ export async function getFilesContainTag(
   folderPath: string,
   fileList: string[],
   searchTag: string,
-  extractFileTags: (filePath: string) => Promise<string[]> | string[]
+  readFileContent: (filePath: string) => string | Promise<string>
 ) {
   const list: string[] = [];
   const promises = fileList.filter(isMarkdownFile).map(async (absolutePath) => {
-    const tagsInFile = await extractFileTags(absolutePath);
+    const tagsInFile = await extractFileTags(absolutePath, readFileContent);
     const relativePath = path.relative(folderPath, absolutePath);
 
     if (searchTag === ALL_TAGS) {
