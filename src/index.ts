@@ -17,6 +17,14 @@ export const purifyTag = (tag: string) => {
   return tag.slice(1);
 };
 
+export function extractFileTitle(
+  filePath: string,
+  readFileContent: (filePath: string) => string
+) {
+  const content = readFileContent(filePath);
+  return extractTitleFromContent(content);
+}
+
 /**
  * 从文件内容中获得文件标题，一般为文件的第一行，以 # 开头
  */
@@ -40,7 +48,7 @@ const MARKDOWN_REGEX = /(?<=^|\s)#(?!\s|#|!|\d)([\S]+)/gm;
 /**
  * 检查给定的内容中是否包含标签，并提取出来
  */
-export const extractTagsFromContent = (content: string) => {
+export const extractTagsFromContent = (content: string): string[] | null => {
   const tags = content.match(MARKDOWN_REGEX);
   if (!tags) {
     return null;
