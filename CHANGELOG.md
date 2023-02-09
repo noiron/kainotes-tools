@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/noiron/kainotes-tools/compare/v0.0.6...v0.0.7) (2023-02-09)
+
+
+### Features
+
+* add extractFileTags ([b9cd629](https://github.com/noiron/kainotes-tools/commit/b9cd629923944f2213e2c0a811d54ae26a2797f3))
+
 ### [0.0.6](https://github.com/noiron/kainotes-tools/compare/v0.0.5...v0.0.6) (2023-02-09)
 
 
