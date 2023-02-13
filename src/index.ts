@@ -1,4 +1,7 @@
 import * as path from 'path';
+import * as fs from 'fs';
+
+type ReadFileContent = (filePath: string) => string | Promise<string>;
 
 /**
  * 判断一个文件是否为 markdown 文件
@@ -19,7 +22,7 @@ export const purifyTag = (tag: string) => {
 
 export async function extractFileTitle(
   filePath: string,
-  readFileContent: (filePath: string) => string | Promise<string>
+  readFileContent = readFileContentDefault as ReadFileContent
 ) {
   const content = await readFileContent(filePath);
   return extractTitleFromContent(content);
@@ -43,7 +46,7 @@ export function extractTitleFromContent(content: string) {
 
 export const extractFileTags = async (
   filePath: string,
-  readFileContent: (filePath: string) => string | Promise<string>
+  readFileContent = readFileContentDefault as ReadFileContent
 ) => {
   const content = await readFileContent(filePath);
   return extractTagsFromContent(content) || [];
@@ -78,7 +81,7 @@ export async function getFilesContainTag(
   folderPath: string,
   fileList: string[],
   searchTag: string,
-  readFileContent: (filePath: string) => string | Promise<string>
+  readFileContent = readFileContentDefault as ReadFileContent
 ) {
   const list: string[] = [];
   const promises = fileList.filter(isMarkdownFile).map(async (absolutePath) => {
@@ -101,4 +104,15 @@ export async function getFilesContainTag(
   });
   await Promise.all(promises);
   return list;
+}
+
+/**
+ * 给定一个文件地址，以字符串形式返回文件内容
+ * @param filePath
+ * @returns
+ */
+function readFileContentDefault(filePath: string): string {
+  return fs.readFileSync(filePath, {
+    encoding: 'utf-8',
+  });
 }
